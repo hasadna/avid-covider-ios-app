@@ -28,7 +28,6 @@ class DataManager {
         return clearAllViewModels(context: context)
             .andThen(updateSurveyCreateIfNeeded(context: context))
             .andThen(requestProvisionalPermissionIfNeeded())
-            .andThen(refreshNotificationSettings(context: context))
             .andThen(save(context))
     }
         
@@ -38,7 +37,7 @@ class DataManager {
                 .flatMapCompletable ({ settings in
                     switch settings.authorizationStatus {
                     case .notDetermined:
-                        return NotificationCenterUtils.requestAuthorization(options: [.badge, .alert, .provisional])
+                        return NotificationCenterUtils.requestAuthorization(options: [.badge, .alert, .sound, .provisional])
                             .asCompletable()
                     default:
                         return .empty()

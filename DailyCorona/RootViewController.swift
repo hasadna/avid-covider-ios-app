@@ -128,7 +128,7 @@ extension RootViewController {
             
             present(vc, animated: true, completion: nil)
         case .requestNotificationsAuthorization:
-            _ = NotificationCenterUtils.requestAuthorization(options: [.alert, .badge])
+            _ = NotificationCenterUtils.requestAuthorization(options: [.alert, .badge, .sound])
                 .asCompletable()
                 .andThen(DataManager.shared.refreshNotificationSettings())
                 .observeOn(MainScheduler.instance)
