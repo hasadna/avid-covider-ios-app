@@ -27,10 +27,28 @@ class DataManager {
         
         return clearAllViewModels(context: context)
             .andThen(updateSurveyCreateIfNeeded(context: context))
+            .andThen(requestProvisionalPermissionIfNeeded())
             .andThen(refreshNotificationSettings(context: context))
             .andThen(save(context))
     }
         
+    private func requestProvisionalPermissionIfNeeded() -> Completable {
+        if #available(iOS 13, *) {
+            return NotificationCenterUtils.getNotificationSettings()
+                .flatMapCompletable ({ settings in
+                    switch settings.authorizationStatus {
+                    case .notDetermined:
+                        return NotificationCenterUtils.requestAuthorization(options: [.badge, .alert, .provisional])
+                            .asCompletable()
+                    default:
+                        return .empty()
+                    }
+                })
+        } else {
+            return .empty()
+        }
+    }
+    
     func updateLastOpened() -> Completable {
         let context = container.newBackgroundContext()
         
@@ -169,14 +187,14 @@ class DataManager {
                 settingsMO.addToViewModels(viewModel)
                 
                 switch settings.authorizationStatus {
-                case .notDetermined:
+                case .notDetermined,
+                     .provisional:
                     let viewModel = ViewModel(context: context)
                     viewModel.section = 1
                     viewModel.row = 1
                     viewModel.type = ViewModelType.requestNotificationsAuthorization.rawValue
                     settingsMO.addToViewModels(viewModel)
-                case .denied,
-                     .provisional:
+                case .denied:
                     let viewModel = ViewModel(context: context)
                     viewModel.section = 1
                     viewModel.row = 1

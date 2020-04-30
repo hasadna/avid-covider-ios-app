@@ -14,7 +14,7 @@ import RxSwift
 class RootViewController: UITableViewController {
 
     private enum Section: String, CaseIterable {
-        case survey = "SURVEY"
+        case survey = "DAILY REPORT"
         case notifications = "DAILY NOTIFICATIONS"
     }
     
@@ -32,7 +32,7 @@ class RootViewController: UITableViewController {
         
         try? frc.performFetch()
                 
-        title = "Corona Survey"
+        title = "COVID-19 Daily Report"
     }
     
     private let dateFormatter: DateFormatter = {
@@ -91,7 +91,7 @@ extension RootViewController {
                 cell.detailTextLabel?.text = nil
             }
             
-            cell.textLabel?.text = "Fill Survey"
+            cell.textLabel?.text = "Fill Report"
             cell.accessoryType = .disclosureIndicator
         case .notificationsAuthorizationStatus:
             let settings = vm.notificationSettings!.settings as! UNNotificationSettings
@@ -105,7 +105,7 @@ extension RootViewController {
                 cell.textLabel?.text = "Notifications Disabled"
             }
         case .requestNotificationsAuthorization:
-            cell.textLabel?.text = "Enable Prominent Notifications"
+            cell.textLabel?.text = "Enable Notifications"
             cell.textLabel?.textColor = cell.textLabel?.tintColor
         case .openNotificationSettings:
             cell.textLabel?.text = "Open Notification Settings"
