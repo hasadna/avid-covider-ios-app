@@ -9,12 +9,13 @@
 import UIKit
 import CoreData
 import SafariServices
+import RxSwift
 
 class RootViewController: UITableViewController {
 
     private enum Section: String, CaseIterable {
         case survey = "SURVEY"
-        case notifications = "NOTIFICATIONS"
+        case notifications = "DAILY NOTIFICATIONS"
     }
     
     private var frc: NSFetchedResultsController<ViewModel>!
@@ -42,7 +43,6 @@ class RootViewController: UITableViewController {
 
 }
 
-
 extension RootViewController {
     override func numberOfSections(in tableView: UITableView) -> Int {
         frc.sections?.count ?? 0
@@ -55,13 +55,20 @@ extension RootViewController {
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let reuseIdentifier: String
         let vm = frc.object(at: indexPath)
-        if let _ = vm.survey {
+        
+        let viewModelType = DataManager.ViewModelType(rawValue: vm.type!)!
+        
+        switch viewModelType {
+        case .fillSurvey:
             reuseIdentifier = "surveyReuseIdentifier"
-        } else if let _ = vm.authorizationStatus {
+        case .notificationsAuthorizationStatus:
             reuseIdentifier = "notificationsAuthorizationStatusReuseIdentifier"
-        } else {
-            fatalError()
+        case .requestNotificationsAuthorization:
+            reuseIdentifier = "buttonReuseIdentifier"
+        case .openNotificationSettings:
+            reuseIdentifier = "buttonReuseIdentifier"
         }
+        
         let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath)
         
         configure(cell, at: indexPath)
@@ -72,7 +79,12 @@ extension RootViewController {
     private func configure(_ cell: UITableViewCell, at indexPath: IndexPath) {
         let vm = frc.object(at: indexPath)
         
-        if let survey = vm.survey {
+        let viewModelType = DataManager.ViewModelType(rawValue: vm.type!)!
+        
+        switch viewModelType {
+        case .fillSurvey:
+           let survey = vm.survey!
+            
             if let lastOpened = survey.lastOpened {
                 cell.detailTextLabel?.text = "Last opened: \(dateFormatter.string(from: lastOpened))"
             } else {
@@ -81,41 +93,75 @@ extension RootViewController {
             
             cell.textLabel?.text = "Fill Survey"
             cell.accessoryType = .disclosureIndicator
-        }
-        
-        if let authorizationStatus = vm.authorizationStatus,
-            let status = UNAuthorizationStatus(rawValue: Int(authorizationStatus.status)) {
+        case .notificationsAuthorizationStatus:
+            let settings = vm.notificationSettings!.settings as! UNNotificationSettings
             
-            switch status {
+            switch settings.authorizationStatus {
             case .authorized:
-                cell.textLabel?.text = "Notifications Enabled"
+                cell.textLabel?.text = "Prominent Notifications Enabled"
             case .provisional:
-                cell.textLabel?.text = "Silent Notifications Enabled"
+                cell.textLabel?.text = "Quiet Notifications Enabled"
             default:
                 cell.textLabel?.text = "Notifications Disabled"
             }
+        case .requestNotificationsAuthorization:
+            cell.textLabel?.text = "Enable Prominent Notifications"
+            cell.textLabel?.textColor = cell.textLabel?.tintColor
+        case .openNotificationSettings:
+            cell.textLabel?.text = "Open Notification Settings"
+            cell.textLabel?.textColor = cell.textLabel?.tintColor
         }
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let vm = frc.object(at: indexPath)
         
-        if let survey = vm.survey {
-            if let url = survey.url {
-                let vc = SFSafariViewController(url: url)
+        let viewModelType = DataManager.ViewModelType(rawValue: vm.type!)!
+        
+        switch viewModelType {
+        case .fillSurvey:
+            let url = vm.survey!.url!
+            
+            let vc = SFSafariViewController(url: url)
+            
+            _ = DataManager.shared.updateLastOpened().subscribe()
+            
+            present(vc, animated: true, completion: nil)
+        case .requestNotificationsAuthorization:
+            _ = NotificationCenterUtils.requestAuthorization(options: [.alert, .badge])
+                .asCompletable()
+                .andThen(DataManager.shared.refreshNotificationSettings())
+                .observeOn(MainScheduler.instance)
+                .subscribe(onCompleted: {
+                    tableView.deselectRow(at: indexPath, animated: true)
+                })
                 
-                DataManager.shared.updateLastOpened()
-                present(vc, animated: true, completion: nil)
+        case .openNotificationSettings:
+            guard let settingsUrl = URL(string: UIApplication.openSettingsURLString) else {
+                return
             }
+
+            if UIApplication.shared.canOpenURL(settingsUrl) {
+                UIApplication.shared.open(settingsUrl) { success in
+                    tableView.deselectRow(at: indexPath, animated: true)
+                }
+            }
+        case .notificationsAuthorizationStatus:
+            break
         }
     }
     
     override func tableView(_ tableView: UITableView, shouldHighlightRowAt indexPath: IndexPath) -> Bool {
         let vm = frc.object(at: indexPath)
         
-        if let _ = vm.survey {
+        let viewModelType = DataManager.ViewModelType(rawValue: vm.type!)!
+        
+        switch viewModelType {
+        case .fillSurvey,
+             .requestNotificationsAuthorization,
+             .openNotificationSettings:
             return true
-        } else {
+        case .notificationsAuthorizationStatus:
             return false
         }
     }

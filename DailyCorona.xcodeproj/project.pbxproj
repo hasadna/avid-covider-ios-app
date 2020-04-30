@@ -17,6 +17,7 @@
 		E0D7401F2459AF8400206998 /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0D7401E2459AF8400206998 /* RootViewController.swift */; };
 		E0D740222459B8A800206998 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E0D740202459B8A800206998 /* Model.xcdatamodeld */; };
 		E0D740242459B97900206998 /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0D740232459B97900206998 /* DataManager.swift */; };
+		E0F091FB245B11BC00336F21 /* NotificationCenterUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0F091FA245B11BC00336F21 /* NotificationCenterUtils.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +31,7 @@
 		E0D7401E2459AF8400206998 /* RootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewController.swift; sourceTree = "<group>"; };
 		E0D740212459B8A800206998 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
 		E0D740232459B97900206998 /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
+		E0F091FA245B11BC00336F21 /* NotificationCenterUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationCenterUtils.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,6 +70,7 @@
 				E0D7400A2459AB5F00206998 /* SceneDelegate.swift */,
 				E0D7401E2459AF8400206998 /* RootViewController.swift */,
 				E0D740232459B97900206998 /* DataManager.swift */,
+				E0F091FA245B11BC00336F21 /* NotificationCenterUtils.swift */,
 				E0D740202459B8A800206998 /* Model.xcdatamodeld */,
 				E0D7400E2459AB5F00206998 /* Main.storyboard */,
 				E0D740112459AB6000206998 /* Assets.xcassets */,
@@ -158,6 +161,7 @@
 				E0D740092459AB5F00206998 /* AppDelegate.swift in Sources */,
 				E0D740242459B97900206998 /* DataManager.swift in Sources */,
 				E0D7400B2459AB5F00206998 /* SceneDelegate.swift in Sources */,
+				E0F091FB245B11BC00336F21 /* NotificationCenterUtils.swift in Sources */,
 				E0D7401F2459AF8400206998 /* RootViewController.swift in Sources */,
 				E0D740222459B8A800206998 /* Model.xcdatamodeld in Sources */,
 			);
