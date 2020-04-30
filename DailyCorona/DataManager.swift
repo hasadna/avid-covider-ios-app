@@ -33,7 +33,7 @@ class DataManager {
     }
         
     private func requestProvisionalPermissionIfNeeded() -> Completable {
-        if #available(iOS 13, *) {
+        if #available(iOS 12, *) {
             return NotificationCenterUtils.getNotificationSettings()
                 .flatMapCompletable ({ settings in
                     switch settings.authorizationStatus {
