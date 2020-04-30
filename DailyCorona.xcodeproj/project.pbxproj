@@ -3,27 +3,33 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E05F5F3A2459DEFE0043FAEC /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = E05F5F392459DEFE0043FAEC /* RxSwift */; };
+		E05F5F3C2459DEFE0043FAEC /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = E05F5F3B2459DEFE0043FAEC /* RxCocoa */; };
 		E0D740092459AB5F00206998 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0D740082459AB5F00206998 /* AppDelegate.swift */; };
 		E0D7400B2459AB5F00206998 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0D7400A2459AB5F00206998 /* SceneDelegate.swift */; };
-		E0D7400D2459AB5F00206998 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0D7400C2459AB5F00206998 /* ViewController.swift */; };
 		E0D740102459AB5F00206998 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E0D7400E2459AB5F00206998 /* Main.storyboard */; };
 		E0D740122459AB6000206998 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E0D740112459AB6000206998 /* Assets.xcassets */; };
 		E0D740152459AB6000206998 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E0D740132459AB6000206998 /* LaunchScreen.storyboard */; };
+		E0D7401F2459AF8400206998 /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0D7401E2459AF8400206998 /* RootViewController.swift */; };
+		E0D740222459B8A800206998 /* Model.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = E0D740202459B8A800206998 /* Model.xcdatamodeld */; };
+		E0D740242459B97900206998 /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0D740232459B97900206998 /* DataManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		E0D740052459AB5F00206998 /* DailyCorona.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DailyCorona.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E0D740082459AB5F00206998 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E0D7400A2459AB5F00206998 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		E0D7400C2459AB5F00206998 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		E0D7400F2459AB5F00206998 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		E0D740112459AB6000206998 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		E0D740142459AB6000206998 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		E0D740162459AB6000206998 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E0D7401E2459AF8400206998 /* RootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewController.swift; sourceTree = "<group>"; };
+		E0D740212459B8A800206998 /* Model.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Model.xcdatamodel; sourceTree = "<group>"; };
+		E0D740232459B97900206998 /* DataManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -31,6 +37,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E05F5F3C2459DEFE0043FAEC /* RxCocoa in Frameworks */,
+				E05F5F3A2459DEFE0043FAEC /* RxSwift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -58,7 +66,9 @@
 			children = (
 				E0D740082459AB5F00206998 /* AppDelegate.swift */,
 				E0D7400A2459AB5F00206998 /* SceneDelegate.swift */,
-				E0D7400C2459AB5F00206998 /* ViewController.swift */,
+				E0D7401E2459AF8400206998 /* RootViewController.swift */,
+				E0D740232459B97900206998 /* DataManager.swift */,
+				E0D740202459B8A800206998 /* Model.xcdatamodeld */,
 				E0D7400E2459AB5F00206998 /* Main.storyboard */,
 				E0D740112459AB6000206998 /* Assets.xcassets */,
 				E0D740132459AB6000206998 /* LaunchScreen.storyboard */,
@@ -83,6 +93,10 @@
 			dependencies = (
 			);
 			name = DailyCorona;
+			packageProductDependencies = (
+				E05F5F392459DEFE0043FAEC /* RxSwift */,
+				E05F5F3B2459DEFE0043FAEC /* RxCocoa */,
+			);
 			productName = DailyCorona;
 			productReference = E0D740052459AB5F00206998 /* DailyCorona.app */;
 			productType = "com.apple.product-type.application";
@@ -111,6 +125,9 @@
 				Base,
 			);
 			mainGroup = E0D73FFC2459AB5F00206998;
+			packageReferences = (
+				E05F5F382459DEFE0043FAEC /* XCRemoteSwiftPackageReference "RxSwift" */,
+			);
 			productRefGroup = E0D740062459AB5F00206998 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -138,9 +155,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E0D7400D2459AB5F00206998 /* ViewController.swift in Sources */,
 				E0D740092459AB5F00206998 /* AppDelegate.swift in Sources */,
+				E0D740242459B97900206998 /* DataManager.swift in Sources */,
 				E0D7400B2459AB5F00206998 /* SceneDelegate.swift in Sources */,
+				E0D7401F2459AF8400206998 /* RootViewController.swift in Sources */,
+				E0D740222459B8A800206998 /* Model.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -287,6 +306,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = EC588YUM9S;
 				INFOPLIST_FILE = DailyCorona/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -305,6 +325,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = EC588YUM9S;
 				INFOPLIST_FILE = DailyCorona/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -338,6 +359,43 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		E05F5F382459DEFE0043FAEC /* XCRemoteSwiftPackageReference "RxSwift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/ReactiveX/RxSwift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.1.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		E05F5F392459DEFE0043FAEC /* RxSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E05F5F382459DEFE0043FAEC /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxSwift;
+		};
+		E05F5F3B2459DEFE0043FAEC /* RxCocoa */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E05F5F382459DEFE0043FAEC /* XCRemoteSwiftPackageReference "RxSwift" */;
+			productName = RxCocoa;
+		};
+/* End XCSwiftPackageProductDependency section */
+
+/* Begin XCVersionGroup section */
+		E0D740202459B8A800206998 /* Model.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				E0D740212459B8A800206998 /* Model.xcdatamodel */,
+			);
+			currentVersion = E0D740212459B8A800206998 /* Model.xcdatamodel */;
+			path = Model.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = E0D73FFD2459AB5F00206998 /* Project object */;
 }

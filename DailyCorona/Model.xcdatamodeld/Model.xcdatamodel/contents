@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="16119" systemVersion="19E287" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="NotificationsAuthorizationStatus" representedClassName="NotificationsAuthorizationStatus" syncable="YES" codeGenerationType="class">
+        <attribute name="status" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="viewModel" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="ViewModel" inverseName="authorizationStatus" inverseEntity="ViewModel"/>
+    </entity>
+    <entity name="Survey" representedClassName="Survey" syncable="YES" codeGenerationType="class">
+        <attribute name="lastOpened" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="url" attributeType="URI"/>
+        <relationship name="viewModel" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="ViewModel" inverseName="survey" inverseEntity="ViewModel"/>
+    </entity>
+    <entity name="ViewModel" representedClassName="ViewModel" syncable="YES" codeGenerationType="class">
+        <attribute name="lastModified" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="row" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="section" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="sectionName" optional="YES" attributeType="String"/>
+        <relationship name="authorizationStatus" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="NotificationsAuthorizationStatus" inverseName="viewModel" inverseEntity="NotificationsAuthorizationStatus"/>
+        <relationship name="survey" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Survey" inverseName="viewModel" inverseEntity="Survey"/>
+    </entity>
+    <elements>
+        <element name="NotificationsAuthorizationStatus" positionX="-54" positionY="45" width="128" height="73"/>
+        <element name="Survey" positionX="-63" positionY="-18" width="128" height="88"/>
+        <element name="ViewModel" positionX="-63" positionY="9" width="128" height="133"/>
+    </elements>
+</model>
