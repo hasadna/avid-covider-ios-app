@@ -14,8 +14,9 @@ import RxSwift
 class RootViewController: UITableViewController {
 
     private enum Section: String, CaseIterable {
-        case survey = "DAILY REPORT"
-        case notifications = "DAILY NOTIFICATIONS"
+        case survey = "REPORT"
+        case notifications = "NOTIFICATIONS"
+        case reminder = "DAILY REMINDER"
     }
     
     private var frc: NSFetchedResultsController<ViewModel>!
@@ -32,12 +33,13 @@ class RootViewController: UITableViewController {
         
         try? frc.performFetch()
                 
-        title = "COVID-19 Daily Report"
+        title = "Daily Health Report"
     }
     
     private let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
-        formatter.dateStyle = .long
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .short
         return formatter
     }()
 
@@ -67,6 +69,8 @@ extension RootViewController {
             reuseIdentifier = "buttonReuseIdentifier"
         case .openNotificationSettings:
             reuseIdentifier = "buttonReuseIdentifier"
+        case .reminder:
+            reuseIdentifier = "notificationsAuthorizationStatusReuseIdentifier"
         }
         
         let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath)
@@ -81,28 +85,28 @@ extension RootViewController {
         
         let viewModelType = DataManager.ViewModelType(rawValue: vm.type!)!
         
+        cell.accessoryView = nil
+        
         switch viewModelType {
         case .fillSurvey:
            let survey = vm.survey!
             
             if let lastOpened = survey.lastOpened {
-                cell.detailTextLabel?.text = "Last opened: \(dateFormatter.string(from: lastOpened))"
+                cell.detailTextLabel?.text = "Last opened on \(dateFormatter.string(from: lastOpened))"
             } else {
                 cell.detailTextLabel?.text = nil
             }
             
-            cell.textLabel?.text = "Fill Report"
+            cell.textLabel?.text = "COVID-19 Daily Report"
             cell.accessoryType = .disclosureIndicator
         case .notificationsAuthorizationStatus:
             let settings = vm.notificationSettings!.settings as! UNNotificationSettings
             
             switch settings.authorizationStatus {
             case .authorized:
-                cell.textLabel?.text = "Prominent Notifications Enabled"
-            case .provisional:
-                cell.textLabel?.text = "Quiet Notifications Enabled"
+                cell.textLabel?.text = "Enabled"
             default:
-                cell.textLabel?.text = "Notifications Disabled"
+                cell.textLabel?.text = "Disabled"
             }
         case .requestNotificationsAuthorization:
             cell.textLabel?.text = "Enable Notifications"
@@ -110,6 +114,18 @@ extension RootViewController {
         case .openNotificationSettings:
             cell.textLabel?.text = "Open Notification Settings"
             cell.textLabel?.textColor = cell.textLabel?.tintColor
+        case .reminder:
+            let request = vm.reminder!.notificationRequest as! UNNotificationRequest
+            let trigger = request.trigger as! UNCalendarNotificationTrigger
+            let date = trigger.nextTriggerDate()!
+            
+            cell.textLabel?.text = "Next Reminder"
+            
+            let label = UILabel()
+            label.text = dateFormatter.string(from: date)
+            label.sizeToFit()
+            
+            cell.accessoryView = label
         }
     }
     
@@ -128,7 +144,7 @@ extension RootViewController {
             
             present(vc, animated: true, completion: nil)
         case .requestNotificationsAuthorization:
-            _ = NotificationCenterUtils.requestAuthorization(options: [.alert, .badge, .sound])
+            _ = NotificationCenterUtils.requestAuthorization(options: [.alert, .sound])
                 .asCompletable()
                 .andThen(DataManager.shared.refreshNotificationSettings())
                 .observeOn(MainScheduler.instance)
@@ -146,7 +162,8 @@ extension RootViewController {
                     tableView.deselectRow(at: indexPath, animated: true)
                 }
             }
-        case .notificationsAuthorizationStatus:
+        case .notificationsAuthorizationStatus,
+             .reminder:
             break
         }
     }
@@ -161,7 +178,8 @@ extension RootViewController {
              .requestNotificationsAuthorization,
              .openNotificationSettings:
             return true
-        case .notificationsAuthorizationStatus:
+        case .notificationsAuthorizationStatus,
+             .reminder:
             return false
         }
     }

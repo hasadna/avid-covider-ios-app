@@ -18,6 +18,7 @@ class DataManager {
     enum ViewModelType: String {
         case fillSurvey
         case notificationsAuthorizationStatus
+        case reminder
         case requestNotificationsAuthorization
         case openNotificationSettings
     }
@@ -30,14 +31,14 @@ class DataManager {
             .andThen(requestProvisionalPermissionIfNeeded())
             .andThen(save(context))
     }
-        
+    
     private func requestProvisionalPermissionIfNeeded() -> Completable {
         if #available(iOS 12, *) {
             return NotificationCenterUtils.getNotificationSettings()
                 .flatMapCompletable ({ settings in
                     switch settings.authorizationStatus {
                     case .notDetermined:
-                        return NotificationCenterUtils.requestAuthorization(options: [.badge, .alert, .sound, .provisional])
+                        return NotificationCenterUtils.requestAuthorization(options: [.alert, .sound, .provisional])
                             .asCompletable()
                     default:
                         return .empty()
@@ -53,6 +54,102 @@ class DataManager {
         
         return updateLastOpened(context: context)
             .andThen(save(context))
+    }
+    
+    private func scheduleDefaultReminderIfNeeded(context: NSManagedObjectContext) -> Completable {
+        getNotificationSettingsMOCreateIfNeeded(context: context)
+            .map { $0.settings as! UNNotificationSettings }
+            .flatMapCompletable({ settings in
+                switch settings.authorizationStatus {
+                case .authorized,
+                     .provisional:
+                    return self.scheduleReminder(dateComponents: .init(hour: 12),
+                                                 overrideExisting: false,
+                                                 context: context)
+                        .andThen(self.updateReminderViewModel(settings: settings,
+                                                              context: context))
+                default:
+                    return .empty()
+                }
+            })
+    }
+    
+    private func scheduleReminder(dateComponents: DateComponents, overrideExisting: Bool, context: NSManagedObjectContext) -> Completable {
+        if overrideExisting {
+            return scheduleReminder(dateComponents: dateComponents, context: context)
+        } else {
+            return existingNotificationRequest(context: context)
+                .flatMapCompletable({ request in
+                    if let _ = request {
+                        return .empty()
+                    } else {
+                        return self.scheduleReminder(dateComponents: dateComponents, context: context)
+                    }
+                })
+        }
+    }
+    
+    private func scheduleReminder(dateComponents: DateComponents, context: NSManagedObjectContext) -> Completable {
+        let request = NotificationCenterUtils.createReminderRequest(dateComponents: dateComponents)
+        return NotificationCenterUtils.schedule(request: request)
+            .andThen(createReminderIfNeeded(notificationRequest: request, context: context))
+    }
+    
+    private func existingNotificationRequest(context: NSManagedObjectContext) -> Single<UNNotificationRequest?> {
+        .create { observer in
+            context.perform {
+                do {
+                    let request: NSFetchRequest<Reminder> = Reminder.fetchRequest()
+                    
+                    if let reminder = try context.fetch(request).first {
+                        observer(.success(reminder.notificationRequest as? UNNotificationRequest))
+                    } else {
+                        observer(.success(nil))
+                    }
+                    
+                } catch {
+                    observer(.error(error))
+                }
+            }
+            
+            return Disposables.create()
+        }
+    }
+    
+    private func createReminderIfNeeded(notificationRequest: UNNotificationRequest, context: NSManagedObjectContext) -> Completable {
+        .create { observer in
+            context.perform {
+                do {
+                    let request: NSFetchRequest<Reminder> = Reminder.fetchRequest()
+                    
+                    let reminder: Reminder
+                    if let existing = try context.fetch(request).first {
+                        reminder = existing
+                    } else {
+                        reminder = Reminder(context: context)
+                        
+                    }
+                    reminder.notificationRequest = notificationRequest
+                    
+                    observer(.completed)
+                } catch {
+                    observer(.error(error))
+                }
+            }
+            
+            return Disposables.create()
+        }
+    }
+    
+    private func unscheduleReminder(context: NSManagedObjectContext) -> Completable {
+        existingNotificationRequest(context: context)
+            .flatMapCompletable({
+                if let request = $0 {
+                    return NotificationCenterUtils.unschedule(request: request)
+                } else {
+                    return .empty()
+                }
+            })
     }
     
     private func updateLastOpened(context: NSManagedObjectContext) -> Completable {
@@ -81,6 +178,8 @@ class DataManager {
         let context = container.newBackgroundContext()
         
         return refreshNotificationSettings(context: context)
+            .andThen(scheduleDefaultReminderIfNeeded(context: context))
+            .andThen(updateReminder(context: context))
             .andThen(save(context))
     }
     
@@ -88,9 +187,33 @@ class DataManager {
         Single.zip(NotificationCenterUtils.getNotificationSettings(),
                    getNotificationSettingsMOCreateIfNeeded(context: context))
             .flatMapCompletable { settings, settingsMO in
-                self.updateViewModelsCreateIfNeeded(settingsMO: settingsMO,
-                                                    settings: settings,
-                                                    context: context) }
+                self.updateSettingsViewModels(settingsMO: settingsMO,
+                                              settings: settings,
+                                              context: context) }
+    }
+    
+    private func updateReminder(context: NSManagedObjectContext) -> Completable {
+        Single.zip(getNotificationSettingsMOCreateIfNeeded(context: context),
+                   existingNotificationRequest(context: context))
+            .flatMapCompletable({ settingsMO, request in
+                guard let request = request else {
+                    return .empty()
+                }
+                
+                let settings = settingsMO.settings as! UNNotificationSettings
+                
+                switch settings.authorizationStatus {
+                case .authorized,
+                     .provisional:
+                    return NotificationCenterUtils.schedule(request: request)
+                        .andThen(self.updateReminderViewModel(settings: settings,
+                                                              context: context))
+                default:
+                    return NotificationCenterUtils.unschedule(request: request)
+                        .andThen(self.updateReminderViewModel(settings: settings,
+                                                              context: context))
+                }
+            })
     }
     
     private func clearAllViewModels(context: NSManagedObjectContext) -> Completable {
@@ -103,7 +226,6 @@ class DataManager {
                         context.delete(vm)
                     }
                     
-                    try context.save()
                     observer(.completed)
                 } catch {
                     observer(.error(error))
@@ -167,10 +289,10 @@ class DataManager {
             return Disposables.create()
         }
     }
-        
-    private func updateViewModelsCreateIfNeeded(settingsMO: NotificationSettings,
-                                                settings: UNNotificationSettings,
-                                                context: NSManagedObjectContext) -> Completable {
+    
+    private func updateSettingsViewModels(settingsMO: NotificationSettings,
+                                          settings: UNNotificationSettings,
+                                          context: NSManagedObjectContext) -> Completable {
         .create { observer in
             context.perform {
                 settingsMO.viewModels?.forEach { vm in
@@ -206,6 +328,41 @@ class DataManager {
                 observer(.completed)
             }
             
+            return Disposables.create()
+        }
+    }
+    
+    private func updateReminderViewModel(settings: UNNotificationSettings,
+                                         context: NSManagedObjectContext) -> Completable {
+        .create { observer in
+            context.perform {
+                do {
+                    let request: NSFetchRequest<Reminder> = Reminder.fetchRequest()
+                    
+                    if let reminder = try context.fetch(request).first {
+                        reminder.viewModels?.forEach { vm in
+                            context.delete(vm as! NSManagedObject)
+                        }
+                        
+                        switch settings.authorizationStatus {
+                        case .authorized,
+                             .provisional:
+                            let viewModel = ViewModel(context: context)
+                            viewModel.type = ViewModelType.reminder.rawValue
+                            viewModel.section = 2
+                            viewModel.row = 0
+                            reminder.addToViewModels(viewModel)
+                        default:
+                            break
+                        }
+                    }
+                    
+                    observer(.completed)
+                    
+                } catch {
+                    observer(.error(error))
+                }
+            }
             return Disposables.create()
         }
     }

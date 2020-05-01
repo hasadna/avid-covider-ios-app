@@ -11,7 +11,7 @@ import RxSwift
 
 class NotificationCenterUtils {
     
-    static let center = UNUserNotificationCenter.current()
+    private static let center = UNUserNotificationCenter.current()
     
     static func getNotificationSettings() -> Single<UNNotificationSettings> {
         .create { observer in
@@ -32,6 +32,70 @@ class NotificationCenterUtils {
                     observer(.success(success))
                 }
             }
+            
+            return Disposables.create()
+        }
+    }
+    
+    static func scheduleReminder(dateComponents: DateComponents) -> Single<UNNotificationRequest> {
+        .create { observer in
+            let identifier = "upcomingReminder"
+            center.removeDeliveredNotifications(withIdentifiers: [identifier])
+            center.removePendingNotificationRequests(withIdentifiers: [identifier])
+            
+            let content = UNMutableNotificationContent()
+            content.title = "Take the Daily Health Report"
+            content.body = "Help beat the Coronavirus!"
+            let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
+            
+            let request = UNNotificationRequest(identifier: identifier,
+                                                content: content,
+                                                trigger: trigger)
+            
+            center.add(request) { error in
+                if let error = error {
+                    observer(.error(error))
+                } else {
+                    observer(.success(request))
+                }
+            }
+            
+            return Disposables.create()
+        }    
+    }
+    
+    static func createReminderRequest(dateComponents: DateComponents) -> UNNotificationRequest {
+        let identifier = "upcomingReminder"
+        let content = UNMutableNotificationContent()
+        content.title = "Take the Daily Health Report"
+        content.body = "Help beat the Coronavirus!"
+        let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
+        
+        return .init(identifier: identifier,
+                     content: content,
+                     trigger: trigger)
+    }
+    
+    static func schedule(request: UNNotificationRequest) -> Completable {
+        .create { observer in
+            center.add(request) { error in
+                if let error = error {
+                    observer(.error(error))
+                } else {
+                    observer(.completed)
+                }
+            }
+            
+            return Disposables.create()
+        }
+    }
+        
+    static func unschedule(request: UNNotificationRequest) -> Completable {
+        .create { observer in
+            center.removeDeliveredNotifications(withIdentifiers: [request.identifier])
+            center.removePendingNotificationRequests(withIdentifiers: [request.identifier])
+            
+            observer(.completed)
             
             return Disposables.create()
         }

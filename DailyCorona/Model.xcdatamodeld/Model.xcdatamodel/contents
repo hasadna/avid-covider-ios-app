@@ -4,6 +4,10 @@
         <attribute name="settings" attributeType="Transformable" valueTransformerName=""/>
         <relationship name="viewModels" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ViewModel" inverseName="notificationSettings" inverseEntity="ViewModel"/>
     </entity>
+    <entity name="Reminder" representedClassName="Reminder" syncable="YES" codeGenerationType="class">
+        <attribute name="notificationRequest" optional="YES" attributeType="Transformable"/>
+        <relationship name="viewModels" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="ViewModel" inverseName="reminder" inverseEntity="ViewModel"/>
+    </entity>
     <entity name="Survey" representedClassName="Survey" syncable="YES" codeGenerationType="class">
         <attribute name="lastOpened" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="url" attributeType="URI"/>
@@ -16,11 +20,13 @@
         <attribute name="sectionName" optional="YES" attributeType="String"/>
         <attribute name="type" optional="YES" attributeType="String"/>
         <relationship name="notificationSettings" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="NotificationSettings" inverseName="viewModels" inverseEntity="NotificationSettings"/>
+        <relationship name="reminder" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Reminder" inverseName="viewModels" inverseEntity="Reminder"/>
         <relationship name="survey" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Survey" inverseName="viewModel" inverseEntity="Survey"/>
     </entity>
     <elements>
         <element name="NotificationSettings" positionX="-54" positionY="45" width="128" height="73"/>
+        <element name="Reminder" positionX="-45" positionY="63" width="128" height="73"/>
         <element name="Survey" positionX="-63" positionY="-18" width="128" height="88"/>
-        <element name="ViewModel" positionX="-63" positionY="9" width="128" height="148"/>
+        <element name="ViewModel" positionX="-63" positionY="9" width="128" height="163"/>
     </elements>
 </model>
