@@ -9,6 +9,7 @@
 import CoreData
 import UserNotifications
 import RxSwift
+import UIKit
 
 class DataManager {
     
@@ -49,11 +50,50 @@ class DataManager {
         }
     }
     
-    func updateLastOpened() -> Completable {
+    func openSurvey() -> Completable {
         let context = container.newBackgroundContext()
         
-        return updateLastOpened(context: context)
+        return getSurveyURL(context: context)
+            .flatMapCompletable({ url in
+                guard let url = url else {
+                    return .empty()
+                }
+                return self.openURL(url)
+                    .andThen(self.updateLastOpened(context: context))
+            })
             .andThen(save(context))
+    }
+    
+    private func getSurveyURL(context: NSManagedObjectContext) -> Single<URL?> {
+        .create { observer in
+            context.perform {
+                do {
+                    let request: NSFetchRequest<Survey> = Survey.fetchRequest()
+                    
+                    observer(.success(try context.fetch(request).first?.url))
+                } catch {
+                    observer(.error(error))
+                }
+            }
+            
+            return Disposables.create()
+        }
+    }
+    
+    private func openURL(_ url: URL) -> Completable {
+        .create { observer in
+            DispatchQueue.main.async {
+                if UIApplication.shared.canOpenURL(url) {
+                    UIApplication.shared.open(url) { _ in
+                        observer(.completed)
+                    }
+                } else {
+                    observer(.completed)
+                }
+            }
+            
+            return Disposables.create()
+        }
     }
     
     private func scheduleDefaultReminderIfNeeded(context: NSManagedObjectContext) -> Completable {

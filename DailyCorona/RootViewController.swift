@@ -134,23 +134,17 @@ extension RootViewController {
         
         let viewModelType = DataManager.ViewModelType(rawValue: vm.type!)!
         
+        tableView.deselectRow(at: indexPath, animated: true)
+        
         switch viewModelType {
         case .fillSurvey:
-            let url = vm.survey!.url!
+            _ = DataManager.shared.openSurvey().subscribe()
             
-            let vc = SFSafariViewController(url: url)
-            
-            _ = DataManager.shared.updateLastOpened().subscribe()
-            
-            present(vc, animated: true, completion: nil)
         case .requestNotificationsAuthorization:
             _ = NotificationCenterUtils.requestAuthorization(options: [.alert, .sound])
                 .asCompletable()
                 .andThen(DataManager.shared.refreshNotificationSettings())
-                .observeOn(MainScheduler.instance)
-                .subscribe(onCompleted: {
-                    tableView.deselectRow(at: indexPath, animated: true)
-                })
+                .subscribe()
                 
         case .openNotificationSettings:
             guard let settingsUrl = URL(string: UIApplication.openSettingsURLString) else {
@@ -158,9 +152,7 @@ extension RootViewController {
             }
 
             if UIApplication.shared.canOpenURL(settingsUrl) {
-                UIApplication.shared.open(settingsUrl) { success in
-                    tableView.deselectRow(at: indexPath, animated: true)
-                }
+                UIApplication.shared.open(settingsUrl)
             }
         case .notificationsAuthorizationStatus,
              .reminder:
