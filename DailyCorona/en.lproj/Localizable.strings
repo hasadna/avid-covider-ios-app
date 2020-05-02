@@ -1,0 +1,24 @@
+/* 
+  Localizable.strings
+  DailyCorona
+
+  Created by Adar Hefer on 02/05/2020.
+  Copyright © 2020 Adar Hefer. All rights reserved.
+*/
+
+"title" = "Daily Health Report";
+
+"report_section_title" = "REPORT";
+"notifications_section_title" = "NOTIFICATIONS";
+"reminder_section_title" = "DAILY REMINDER";
+
+"daily_report_button_title" = "COVID-19 Daily Report";
+"daily_report_button_subtitle" = "Last opened on %@";
+
+"notifications_authorization_status_enabled_title" = "Enabled";
+"notifications_authorization_status_disabled_title" = "Disabled";
+
+"request_notifications_authorization_button_title" = "Enable Notifications";
+"open_notification_settings_button_title" = "Open Notification Settings";
+
+"next_reminder_title" = "Next Reminder";

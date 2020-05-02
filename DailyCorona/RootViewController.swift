@@ -12,11 +12,19 @@ import SafariServices
 import RxSwift
 
 class RootViewController: UITableViewController {
-
-    private enum Section: String, CaseIterable {
-        case survey = "REPORT"
-        case notifications = "NOTIFICATIONS"
-        case reminder = "DAILY REMINDER"
+    
+    private enum Section: CaseIterable {
+        case survey
+        case notifications
+        case reminder
+        
+        var name: String {
+            switch self {
+            case .survey: return .report_section_title
+            case .notifications: return .notifications_section_title
+            case .reminder: return .reminder_section_title
+            }
+        }
     }
     
     private var frc: NSFetchedResultsController<ViewModel>!
@@ -32,8 +40,8 @@ class RootViewController: UITableViewController {
         frc.delegate = self
         
         try? frc.performFetch()
-                
-        title = "Daily Health Report"
+        
+        title = .title
     }
     
     private let dateFormatter: DateFormatter = {
@@ -42,7 +50,7 @@ class RootViewController: UITableViewController {
         formatter.timeStyle = .short
         return formatter
     }()
-
+    
 }
 
 extension RootViewController {
@@ -64,13 +72,13 @@ extension RootViewController {
         case .fillSurvey:
             reuseIdentifier = "surveyReuseIdentifier"
         case .notificationsAuthorizationStatus:
-            reuseIdentifier = "notificationsAuthorizationStatusReuseIdentifier"
+            reuseIdentifier = "basicReuseIdentifier"
         case .requestNotificationsAuthorization:
             reuseIdentifier = "buttonReuseIdentifier"
         case .openNotificationSettings:
             reuseIdentifier = "buttonReuseIdentifier"
         case .reminder:
-            reuseIdentifier = "notificationsAuthorizationStatusReuseIdentifier"
+            reuseIdentifier = "basicReuseIdentifier"
         }
         
         let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath)
@@ -89,37 +97,39 @@ extension RootViewController {
         
         switch viewModelType {
         case .fillSurvey:
-           let survey = vm.survey!
+            let survey = vm.survey!
+            
+            cell.textLabel?.text = .daily_report_button_title
             
             if let lastOpened = survey.lastOpened {
-                cell.detailTextLabel?.text = "Last opened on \(dateFormatter.string(from: lastOpened))"
+                cell.detailTextLabel?.text = String(format: .daily_report_button_subtitle,
+                                                    dateFormatter.string(from: lastOpened))
             } else {
                 cell.detailTextLabel?.text = nil
             }
             
-            cell.textLabel?.text = "COVID-19 Daily Report"
             cell.accessoryType = .disclosureIndicator
         case .notificationsAuthorizationStatus:
             let settings = vm.notificationSettings!.settings as! UNNotificationSettings
             
             switch settings.authorizationStatus {
             case .authorized:
-                cell.textLabel?.text = "Enabled"
+                cell.textLabel?.text = .notifications_authorization_status_enabled_title
             default:
-                cell.textLabel?.text = "Disabled"
+                cell.textLabel?.text = .notifications_authorization_status_disabled_title
             }
         case .requestNotificationsAuthorization:
-            cell.textLabel?.text = "Enable Notifications"
+            cell.textLabel?.text = .request_notifications_authorization_button_title
             cell.textLabel?.textColor = cell.textLabel?.tintColor
         case .openNotificationSettings:
-            cell.textLabel?.text = "Open Notification Settings"
+            cell.textLabel?.text = .open_notification_settings_button_title
             cell.textLabel?.textColor = cell.textLabel?.tintColor
         case .reminder:
             let request = vm.reminder!.notificationRequest as! UNNotificationRequest
             let trigger = request.trigger as! UNCalendarNotificationTrigger
             let date = trigger.nextTriggerDate()!
             
-            cell.textLabel?.text = "Next Reminder"
+            cell.textLabel?.text = .next_reminder_title
             
             let label = UILabel()
             label.text = dateFormatter.string(from: date)
@@ -145,12 +155,12 @@ extension RootViewController {
                 .asCompletable()
                 .andThen(DataManager.shared.refreshNotificationSettings())
                 .subscribe()
-                
+            
         case .openNotificationSettings:
             guard let settingsUrl = URL(string: UIApplication.openSettingsURLString) else {
                 return
             }
-
+            
             if UIApplication.shared.canOpenURL(settingsUrl) {
                 UIApplication.shared.open(settingsUrl)
             }
@@ -177,7 +187,11 @@ extension RootViewController {
     }
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        Section.allCases[section].rawValue
+        if Section.allCases.indices.contains(section) {
+            return Section.allCases[section].name
+        } else {
+            return nil
+        }
     }
 }
 

@@ -1,0 +1,24 @@
+/* 
+  Localizable.strings
+  DailyCorona
+
+  Created by Adar Hefer on 02/05/2020.
+  Copyright © 2020 Adar Hefer. All rights reserved.
+*/
+
+"title" = "דיווח בריאות יומי";
+
+"report_section_title" = "דיווח";
+"notifications_section_title" = "התראות";
+"reminder_section_title" = "תזכורת יומית";
+
+"daily_report_button_title" = "דיווח בריאות יומי";
+"daily_report_button_subtitle" = "נפתח לאחרונה ב %@";
+
+"notifications_authorization_status_enabled_title" = "מופעלות";
+"notifications_authorization_status_disabled_title" = "לא מופעלות";
+
+"request_notifications_authorization_button_title" = "הפעל/י התראות";
+"open_notification_settings_button_title" = "פתח/י הגדרות";
+
+"next_reminder_title" = "התזכורת הבאה";
