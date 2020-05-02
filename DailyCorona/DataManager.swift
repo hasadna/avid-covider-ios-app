@@ -441,6 +441,10 @@ class DataManager {
     
     private let surveyURLByLanguageCode: [String : URL] = [
         "en" : URL(string: "https://coronaisrael.org/en/")!,
+        "ar" : URL(string: "https://coronaisrael.org/ar/")!,
+        "ru" : URL(string: "https://coronaisrael.org/ru/")!,
+        "es" : URL(string: "https://coronaisrael.org/es/")!,
+        "fr" : URL(string: "https://coronaisrael.org/fr/")!,
         "he" : URL(string: "https://coronaisrael.org")!
     ]
     
