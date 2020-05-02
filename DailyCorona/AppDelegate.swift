@@ -57,6 +57,10 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     }
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-        
+        _ = DataManager.shared.updateReminder()
+            .do(onDispose: {
+                completionHandler(UNNotificationPresentationOptions(rawValue: 0))
+            })
+            .subscribe()
     }
 }

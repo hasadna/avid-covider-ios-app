@@ -192,6 +192,13 @@ class DataManager {
                                               context: context) }
     }
     
+    func updateReminder() -> Completable {
+        let context = container.newBackgroundContext()
+        
+        return updateReminder(context: context)
+            .andThen(save(context))
+    }
+    
     private func updateReminder(context: NSManagedObjectContext) -> Completable {
         Single.zip(getNotificationSettingsMOCreateIfNeeded(context: context),
                    existingNotificationRequest(context: context))
@@ -339,22 +346,25 @@ class DataManager {
                 do {
                     let request: NSFetchRequest<Reminder> = Reminder.fetchRequest()
                     
-                    if let reminder = try context.fetch(request).first {
-                        reminder.viewModels?.forEach { vm in
-                            context.delete(vm as! NSManagedObject)
-                        }
-                        
-                        switch settings.authorizationStatus {
-                        case .authorized,
-                             .provisional:
-                            let viewModel = ViewModel(context: context)
-                            viewModel.type = ViewModelType.reminder.rawValue
-                            viewModel.section = 2
-                            viewModel.row = 0
-                            reminder.addToViewModels(viewModel)
-                        default:
-                            break
-                        }
+                    guard let reminder = try context.fetch(request).first else {
+                        observer(.completed)
+                        return
+                    }
+                    
+                    reminder.viewModels?.forEach { vm in
+                        context.delete(vm as! NSManagedObject)
+                    }
+                    
+                    switch settings.authorizationStatus {
+                    case .authorized,
+                         .provisional:
+                        let viewModel = ViewModel(context: context)
+                        viewModel.type = ViewModelType.reminder.rawValue
+                        viewModel.section = 2
+                        viewModel.row = 0
+                        reminder.addToViewModels(viewModel)
+                    default:
+                        break
                     }
                     
                     observer(.completed)
@@ -370,15 +380,16 @@ class DataManager {
     private func save(_ context: NSManagedObjectContext) -> Completable {
         .create { observer in
             context.perform {
-                if context.hasChanges {
-                    do {
-                        try context.save()
-                        observer(.completed)
-                    } catch {
-                        observer(.error(error))
-                    }
-                } else {
+                guard context.hasChanges else {
                     observer(.completed)
+                    return
+                }
+                
+                do {
+                    try context.save()
+                    observer(.completed)
+                } catch {
+                    observer(.error(error))
                 }
             }
             
