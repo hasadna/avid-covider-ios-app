@@ -44,6 +44,34 @@ class DataManager {
         group.wait()
     }
     
+    func setReminderEdit(enabled: Bool) -> Completable {
+        let context = container.newBackgroundContext()
+        
+        return setReminderEdit(enabled: enabled, context: context)
+            .andThen(updateReminderScheduledStatus(context: context))
+            .andThen(save(context))
+    }
+    
+    private func setReminderEdit(enabled: Bool, context: NSManagedObjectContext) -> Completable {
+        .create { observer in
+            context.perform {
+                do {
+                    let request: NSFetchRequest<Reminder> = Reminder.fetchRequest()
+                    
+                    if let reminder = try context.fetch(request).first {
+                        reminder.isBeingEdited = enabled
+                    }
+                    
+                    observer(.completed)
+                } catch {
+                    observer(.error(error))
+                }
+            }
+            
+            return Disposables.create()
+        }
+    }
+    
     private func createReminderAndSettingsIfNeeded(context: NSManagedObjectContext) -> Completable {
         .create { observer in
             context.perform {
@@ -379,9 +407,7 @@ class DataManager {
                     }
                                         
                     let vms = reminder.viewModels as! Set<ViewModel>
-                    
-                    reminder.isBeingEdited = true
-                    
+                                        
                     switch settings.authorizationStatus {
                     case .authorized,
                          .provisional:

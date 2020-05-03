@@ -137,6 +137,10 @@ extension RootViewController {
             label.text = dateFormatter.string(from: date)
             label.sizeToFit()
             
+            if vm.reminder!.isBeingEdited {
+                label.textColor = label.tintColor
+            }
+            
             cell.accessoryView = label
         case .reminderTimeSelection:
             let cell = cell as! DatePickerTableViewCell
@@ -185,7 +189,9 @@ extension RootViewController {
                 UIApplication.shared.open(settingsUrl)
             }
         case .reminder:
-            break
+            let isBeingEdited = vm.reminder!.isBeingEdited
+            
+            _ = DataManager.shared.setReminderEdit(enabled: !isBeingEdited).subscribe()
         case .notificationsAuthorizationStatus,
              .reminderTimeSelection:
             break
