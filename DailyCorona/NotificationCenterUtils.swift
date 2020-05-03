@@ -36,36 +36,9 @@ class NotificationCenterUtils {
             return Disposables.create()
         }
     }
-    
-    static func scheduleReminder(dateComponents: DateComponents) -> Single<UNNotificationRequest> {
-        .create { observer in
-            let identifier = "upcomingReminder"
-            center.removeDeliveredNotifications(withIdentifiers: [identifier])
-            center.removePendingNotificationRequests(withIdentifiers: [identifier])
-            
-            let content = UNMutableNotificationContent()
-            content.title = "Take the Daily Health Report"
-            content.body = "Help beat the Coronavirus!"
-            let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
-            
-            let request = UNNotificationRequest(identifier: identifier,
-                                                content: content,
-                                                trigger: trigger)
-            
-            center.add(request) { error in
-                if let error = error {
-                    observer(.error(error))
-                } else {
-                    observer(.success(request))
-                }
-            }
-            
-            return Disposables.create()
-        }    
-    }
-    
+        
     static func createReminderRequest(dateComponents: DateComponents) -> UNNotificationRequest {
-        let identifier = "upcomingReminder"
+        let identifier = UUID().uuidString
         let content = UNMutableNotificationContent()
         content.title = "Take the Daily Health Report"
         content.body = "Help beat the Coronavirus!"

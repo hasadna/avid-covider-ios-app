@@ -10,6 +10,7 @@ import UIKit
 import CoreData
 import SafariServices
 import RxSwift
+import RxCocoa
 
 class RootViewController: UITableViewController {
     
@@ -50,7 +51,6 @@ class RootViewController: UITableViewController {
         formatter.timeStyle = .short
         return formatter
     }()
-    
 }
 
 extension RootViewController {
@@ -79,6 +79,8 @@ extension RootViewController {
             reuseIdentifier = "buttonReuseIdentifier"
         case .reminder:
             reuseIdentifier = "basicReuseIdentifier"
+        case .reminderTimeSelection:
+            reuseIdentifier = "datePickerReuseIdentifier"
         }
         
         let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath)
@@ -136,7 +138,25 @@ extension RootViewController {
             label.sizeToFit()
             
             cell.accessoryView = label
+        case .reminderTimeSelection:
+            let cell = cell as! DatePickerTableViewCell
+            cell.datePicker.minuteInterval = 5
+            cell.datePicker.datePickerMode = .time
+            
+            let request = vm.reminder!.notificationRequest as! UNNotificationRequest
+            let trigger = request.trigger as! UNCalendarNotificationTrigger
+            
+            cell.datePicker.date = trigger.nextTriggerDate()!
+            cell.datePicker.addTarget(self, action: #selector(didChangePickerDate), for: .valueChanged)
         }
+    }
+    
+    @objc private func didChangePickerDate(picker: UIDatePicker) {
+        let components = Calendar.current.dateComponents(in: .current, from: picker.date)
+        
+        _ = DataManager.shared.updateReminder(dateComponents: .init(hour: components.hour,
+                                                                    minute: components.minute))
+            .subscribe()
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -164,8 +184,10 @@ extension RootViewController {
             if UIApplication.shared.canOpenURL(settingsUrl) {
                 UIApplication.shared.open(settingsUrl)
             }
+        case .reminder:
+            break
         case .notificationsAuthorizationStatus,
-             .reminder:
+             .reminderTimeSelection:
             break
         }
     }
@@ -178,10 +200,11 @@ extension RootViewController {
         switch viewModelType {
         case .fillSurvey,
              .requestNotificationsAuthorization,
-             .openNotificationSettings:
+             .openNotificationSettings,
+             .reminder:
             return true
         case .notificationsAuthorizationStatus,
-             .reminder:
+             .reminderTimeSelection:
             return false
         }
     }

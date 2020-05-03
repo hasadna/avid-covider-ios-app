@@ -17,7 +17,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
         
-        _ = DataManager.shared.setup().subscribe()
+        DataManager.shared.setup()
         
         UNUserNotificationCenter.current().delegate = self
         
@@ -61,7 +61,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate {
     }
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-        _ = DataManager.shared.updateReminder()
+        _ = DataManager.shared.refreshNotificationSettings()
             .do(onDispose: {
                 completionHandler(UNNotificationPresentationOptions(rawValue: 0))
             })

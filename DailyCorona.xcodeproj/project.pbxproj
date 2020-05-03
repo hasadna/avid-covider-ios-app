@@ -20,6 +20,7 @@
 		E0F091FB245B11BC00336F21 /* NotificationCenterUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0F091FA245B11BC00336F21 /* NotificationCenterUtils.swift */; };
 		E0F09205245DAFE100336F21 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0F09204245DAFE100336F21 /* Extensions.swift */; };
 		E0F09208245DB0FF00336F21 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = E0F0920A245DB0FF00336F21 /* Localizable.strings */; };
+		E0F0920D245EB6A100336F21 /* DatePickerTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0F0920C245EB6A100336F21 /* DatePickerTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -37,6 +38,7 @@
 		E0F09204245DAFE100336F21 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		E0F09209245DB0FF00336F21 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		E0F0920B245DB10800336F21 /* he */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = he; path = he.lproj/Localizable.strings; sourceTree = "<group>"; };
+		E0F0920C245EB6A100336F21 /* DatePickerTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatePickerTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,6 +79,7 @@
 				E0D740232459B97900206998 /* DataManager.swift */,
 				E0F091FA245B11BC00336F21 /* NotificationCenterUtils.swift */,
 				E0F09204245DAFE100336F21 /* Extensions.swift */,
+				E0F0920C245EB6A100336F21 /* DatePickerTableViewCell.swift */,
 				E0F0920A245DB0FF00336F21 /* Localizable.strings */,
 				E0D740202459B8A800206998 /* Model.xcdatamodeld */,
 				E0D7400E2459AB5F00206998 /* Main.storyboard */,
@@ -174,6 +177,7 @@
 				E0D7401F2459AF8400206998 /* RootViewController.swift in Sources */,
 				E0D740222459B8A800206998 /* Model.xcdatamodeld in Sources */,
 				E0F09205245DAFE100336F21 /* Extensions.swift in Sources */,
+				E0F0920D245EB6A100336F21 /* DatePickerTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
