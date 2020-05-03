@@ -22,3 +22,6 @@
 "open_notification_settings_button_title" = "פתח/י הגדרות";
 
 "next_reminder_title" = "התזכורת הבאה";
+
+"reminder_notification_title" = "מלא/י את דיווח הבריאות היומי";
+"reminder_notification_body" = "כך נוכל להביס את נגיף הקורונה!";

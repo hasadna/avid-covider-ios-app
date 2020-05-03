@@ -22,3 +22,6 @@
 "open_notification_settings_button_title" = "Open Notification Settings";
 
 "next_reminder_title" = "Next Reminder";
+
+"reminder_notification_title" = "Take the Daily Health Report";
+"reminder_notification_body" = "Help beat the Coronavirus!";

@@ -26,6 +26,9 @@ extension String {
     
     static let next_reminder_title = "next_reminder_title".localized
     
+    static let reminder_notification_title = "reminder_notification_title".localized
+    static let reminder_notification_body = "reminder_notification_body".localized
+    
     fileprivate var localized: String {
         NSLocalizedString(self, comment: "")
     }

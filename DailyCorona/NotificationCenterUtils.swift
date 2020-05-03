@@ -40,8 +40,8 @@ class NotificationCenterUtils {
     static func createReminderRequest(dateComponents: DateComponents) -> UNNotificationRequest {
         let identifier = UUID().uuidString
         let content = UNMutableNotificationContent()
-        content.title = "Take the Daily Health Report"
-        content.body = "Help beat the Coronavirus!"
+        content.title = .reminder_notification_title
+        content.body = .reminder_notification_body
         let trigger = UNCalendarNotificationTrigger(dateMatching: dateComponents, repeats: true)
         
         return .init(identifier: identifier,
