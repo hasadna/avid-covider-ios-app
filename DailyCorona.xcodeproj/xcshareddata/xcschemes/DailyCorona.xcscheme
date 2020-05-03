@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "E0D740042459AB5F00206998"
-               BuildableName = "DailyCorona.app"
+               BuildableName = "Corona Daily.app"
                BlueprintName = "DailyCorona"
                ReferencedContainer = "container:DailyCorona.xcodeproj">
             </BuildableReference>
@@ -45,7 +45,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E0D740042459AB5F00206998"
-            BuildableName = "DailyCorona.app"
+            BuildableName = "Corona Daily.app"
             BlueprintName = "DailyCorona"
             ReferencedContainer = "container:DailyCorona.xcodeproj">
          </BuildableReference>
@@ -62,7 +62,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "E0D740042459AB5F00206998"
-            BuildableName = "DailyCorona.app"
+            BuildableName = "Corona Daily.app"
             BlueprintName = "DailyCorona"
             ReferencedContainer = "container:DailyCorona.xcodeproj">
          </BuildableReference>
