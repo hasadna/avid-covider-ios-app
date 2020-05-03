@@ -24,7 +24,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		E0D740052459AB5F00206998 /* DailyCorona.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DailyCorona.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		E0D740052459AB5F00206998 /* Corona Daily.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Corona Daily.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E0D740082459AB5F00206998 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E0D7400A2459AB5F00206998 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		E0D7400F2459AB5F00206998 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -65,7 +65,7 @@
 		E0D740062459AB5F00206998 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				E0D740052459AB5F00206998 /* DailyCorona.app */,
+				E0D740052459AB5F00206998 /* Corona Daily.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -111,7 +111,7 @@
 				E05F5F3B2459DEFE0043FAEC /* RxCocoa */,
 			);
 			productName = DailyCorona;
-			productReference = E0D740052459AB5F00206998 /* DailyCorona.app */;
+			productReference = E0D740052459AB5F00206998 /* Corona Daily.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -341,7 +341,7 @@
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.coursequery.DailyCorona;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "Corona Daily";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -360,7 +360,7 @@
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.coursequery.DailyCorona;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "Corona Daily";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
