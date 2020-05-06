@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E0537ABA246296030001091E /* what_to_test.txt in Resources */ = {isa = PBXBuildFile; fileRef = E0537AB9246296030001091E /* what_to_test.txt */; };
 		E05F5F3A2459DEFE0043FAEC /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = E05F5F392459DEFE0043FAEC /* RxSwift */; };
 		E05F5F3C2459DEFE0043FAEC /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = E05F5F3B2459DEFE0043FAEC /* RxCocoa */; };
 		E0D740092459AB5F00206998 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0D740082459AB5F00206998 /* AppDelegate.swift */; };
@@ -24,6 +25,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		E0537AB9246296030001091E /* what_to_test.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = what_to_test.txt; sourceTree = SOURCE_ROOT; };
 		E0D740052459AB5F00206998 /* Corona Daily.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Corona Daily.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		E0D740082459AB5F00206998 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		E0D7400A2459AB5F00206998 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -73,6 +75,7 @@
 		E0D740072459AB5F00206998 /* DailyCorona */ = {
 			isa = PBXGroup;
 			children = (
+				E0537AB9246296030001091E /* what_to_test.txt */,
 				E0D740082459AB5F00206998 /* AppDelegate.swift */,
 				E0D7400A2459AB5F00206998 /* SceneDelegate.swift */,
 				E0D7401E2459AF8400206998 /* RootViewController.swift */,
@@ -157,6 +160,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E0D740152459AB6000206998 /* LaunchScreen.storyboard in Resources */,
+				E0537ABA246296030001091E /* what_to_test.txt in Resources */,
 				E0F09208245DB0FF00336F21 /* Localizable.strings in Resources */,
 				E0D740122459AB6000206998 /* Assets.xcassets in Resources */,
 				E0D740102459AB5F00206998 /* Main.storyboard in Resources */,

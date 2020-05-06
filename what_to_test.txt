@@ -1,0 +1,6 @@
+Version 1.0:
+• (b6) App rebuilt from scratch:
+    - On iOS 12, provisional notification authorization is granted automatically. This means silent notifications will appear in Notification Center. Users can either manually enable prominent notifications from the notification itself once delivered, or from the app at any time. On iOS 11, users must enable notifications manually from the app.
+    - The daily reminder time can be adjusted as long as notifications are enabled in some capacity (either silently or prominently).
+    - The survey can be accessed from the app itself or from tapping a reminder notification. The survey language is opened in the user's device language if possible, and defaults to English if not.
+    - The app has Hebrew and English localizations.
