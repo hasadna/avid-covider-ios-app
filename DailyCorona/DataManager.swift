@@ -326,6 +326,8 @@ class DataManager {
                     if let code = Locale.current.languageCode,
                         let url = self.surveyURLByLanguageCode[code] {
                         survey.url = url
+                    } else if let url = self.surveyURLByLanguageCode["en"] {
+                        survey.url = url
                     }
                     observer(.completed)
                 } catch {
