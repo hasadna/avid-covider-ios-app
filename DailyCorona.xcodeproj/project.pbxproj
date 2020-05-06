@@ -8,8 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		E0537ABA246296030001091E /* what_to_test.txt in Resources */ = {isa = PBXBuildFile; fileRef = E0537AB9246296030001091E /* what_to_test.txt */; };
-		E05F5F3A2459DEFE0043FAEC /* RxSwift in Frameworks */ = {isa = PBXBuildFile; productRef = E05F5F392459DEFE0043FAEC /* RxSwift */; };
-		E05F5F3C2459DEFE0043FAEC /* RxCocoa in Frameworks */ = {isa = PBXBuildFile; productRef = E05F5F3B2459DEFE0043FAEC /* RxCocoa */; };
+		E05F5F3A2459DEFE0043FAEC /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = E05F5F392459DEFE0043FAEC /* SwiftPackageProductDependency */; };
+		E05F5F3C2459DEFE0043FAEC /* BuildFile in Frameworks */ = {isa = PBXBuildFile; productRef = E05F5F3B2459DEFE0043FAEC /* SwiftPackageProductDependency */; };
 		E0D740092459AB5F00206998 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0D740082459AB5F00206998 /* AppDelegate.swift */; };
 		E0D7400B2459AB5F00206998 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = E0D7400A2459AB5F00206998 /* SceneDelegate.swift */; };
 		E0D740102459AB5F00206998 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E0D7400E2459AB5F00206998 /* Main.storyboard */; };
@@ -48,8 +48,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E05F5F3C2459DEFE0043FAEC /* RxCocoa in Frameworks */,
-				E05F5F3A2459DEFE0043FAEC /* RxSwift in Frameworks */,
+				E05F5F3C2459DEFE0043FAEC /* BuildFile in Frameworks */,
+				E05F5F3A2459DEFE0043FAEC /* BuildFile in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -110,8 +110,8 @@
 			);
 			name = DailyCorona;
 			packageProductDependencies = (
-				E05F5F392459DEFE0043FAEC /* RxSwift */,
-				E05F5F3B2459DEFE0043FAEC /* RxCocoa */,
+				E05F5F392459DEFE0043FAEC /* SwiftPackageProductDependency */,
+				E05F5F3B2459DEFE0043FAEC /* SwiftPackageProductDependency */,
 			);
 			productName = DailyCorona;
 			productReference = E0D740052459AB5F00206998 /* Corona Daily.app */;
@@ -129,6 +129,7 @@
 				TargetAttributes = {
 					E0D740042459AB5F00206998 = {
 						CreatedOnToolsVersion = 11.4;
+						ProvisioningStyle = Automatic;
 					};
 				};
 			};
@@ -143,7 +144,7 @@
 			);
 			mainGroup = E0D73FFC2459AB5F00206998;
 			packageReferences = (
-				E05F5F382459DEFE0043FAEC /* XCRemoteSwiftPackageReference "RxSwift" */,
+				E05F5F382459DEFE0043FAEC /* RemoteSwiftPackageReference */,
 			);
 			productRefGroup = E0D740062459AB5F00206998 /* Products */;
 			projectDirPath = "";
@@ -336,6 +337,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = 9X3JVX38MH;
@@ -347,6 +349,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.maatayim.corona;
 				PRODUCT_NAME = "Corona Daily";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -356,6 +359,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 6;
 				DEVELOPMENT_TEAM = 9X3JVX38MH;
@@ -367,6 +371,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.maatayim.corona;
 				PRODUCT_NAME = "Corona Daily";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -396,7 +401,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		E05F5F382459DEFE0043FAEC /* XCRemoteSwiftPackageReference "RxSwift" */ = {
+		E05F5F382459DEFE0043FAEC /* RemoteSwiftPackageReference */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/ReactiveX/RxSwift.git";
 			requirement = {
@@ -407,14 +412,14 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		E05F5F392459DEFE0043FAEC /* RxSwift */ = {
+		E05F5F392459DEFE0043FAEC /* SwiftPackageProductDependency */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = E05F5F382459DEFE0043FAEC /* XCRemoteSwiftPackageReference "RxSwift" */;
+			package = E05F5F382459DEFE0043FAEC /* RemoteSwiftPackageReference */;
 			productName = RxSwift;
 		};
-		E05F5F3B2459DEFE0043FAEC /* RxCocoa */ = {
+		E05F5F3B2459DEFE0043FAEC /* SwiftPackageProductDependency */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = E05F5F382459DEFE0043FAEC /* XCRemoteSwiftPackageReference "RxSwift" */;
+			package = E05F5F382459DEFE0043FAEC /* RemoteSwiftPackageReference */;
 			productName = RxCocoa;
 		};
 /* End XCSwiftPackageProductDependency section */
