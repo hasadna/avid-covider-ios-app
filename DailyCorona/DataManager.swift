@@ -53,49 +53,29 @@ class DataManager {
     }
     
     private func setReminderEdit(enabled: Bool, context: NSManagedObjectContext) -> Completable {
-        .create { observer in
-            context.perform {
-                do {
-                    let request: NSFetchRequest<Reminder> = Reminder.fetchRequest()
-                    
-                    if let reminder = try context.fetch(request).first {
-                        reminder.isBeingEdited = enabled
-                    }
-                    
-                    observer(.completed)
-                } catch {
-                    observer(.error(error))
-                }
-            }
+        .create(context) {
+            let request: NSFetchRequest<Reminder> = Reminder.fetchRequest()
             
-            return Disposables.create()
+            if let reminder = try context.fetch(request).first {
+                reminder.isBeingEdited = enabled
+            }
         }
     }
     
     private func createReminderAndSettingsIfNeeded(context: NSManagedObjectContext) -> Completable {
-        .create { observer in
-            context.perform {
-                do {
-                    let settingsRequest: NSFetchRequest<NotificationSettings> = NotificationSettings.fetchRequest()
-                    
-                    if try context.fetch(settingsRequest).first == nil {
-                        let _ = NotificationSettings(context: context)
-                    }
-                    
-                    let reminderRequest: NSFetchRequest<Reminder> = Reminder.fetchRequest()
-                    
-                    if try context.fetch(reminderRequest).first == nil {
-                        let reminder = Reminder(context: context)
-                        reminder.notificationRequest = NotificationCenterUtils.createReminderRequest(dateComponents: .init(hour: 12))
-                    }
-                    
-                    observer(.completed)
-                } catch {
-                    observer(.error(error))
-                }
+        .create(context) {
+            let settingsRequest: NSFetchRequest<NotificationSettings> = NotificationSettings.fetchRequest()
+            
+            if try context.fetch(settingsRequest).first == nil {
+                let _ = NotificationSettings(context: context)
             }
             
-            return Disposables.create()
+            let reminderRequest: NSFetchRequest<Reminder> = Reminder.fetchRequest()
+            
+            if try context.fetch(reminderRequest).first == nil {
+                let reminder = Reminder(context: context)
+                reminder.notificationRequest = NotificationCenterUtils.createReminderRequest(dateComponents: .init(hour: 12))
+            }
         }
     }
     
@@ -131,18 +111,9 @@ class DataManager {
     }
     
     private func getSurveyURL(context: NSManagedObjectContext) -> Single<URL?> {
-        .create { observer in
-            context.perform {
-                do {
-                    let request: NSFetchRequest<Survey> = Survey.fetchRequest()
-                    
-                    observer(.success(try context.fetch(request).first?.url))
-                } catch {
-                    observer(.error(error))
-                }
-            }
-            
-            return Disposables.create()
+        .create(context) {
+            let request: NSFetchRequest<Survey> = Survey.fetchRequest()
+            return try context.fetch(request).first?.url
         }
     }
     
@@ -172,23 +143,13 @@ class DataManager {
     }
         
     private func updateReminder(dateComponents: DateComponents, context: NSManagedObjectContext) -> Completable {
-        .create { observer in
-            context.perform {
-                do {
-                    let request: NSFetchRequest<Reminder> = Reminder.fetchRequest()
-                    
-                    if let reminder = try context.fetch(request).first {
-                        let notificationRequest = NotificationCenterUtils.createReminderRequest(dateComponents: dateComponents)
-                        reminder.notificationRequest = notificationRequest
-                    }
-                    
-                    observer(.completed)
-                } catch {
-                    observer(.error(error))
-                }
-            }
+        .create(context) {
+            let request: NSFetchRequest<Reminder> = Reminder.fetchRequest()
             
-            return Disposables.create()
+            if let reminder = try context.fetch(request).first {
+                let notificationRequest = NotificationCenterUtils.createReminderRequest(dateComponents: dateComponents)
+                reminder.notificationRequest = notificationRequest
+            }
         }
     }
     
@@ -212,18 +173,9 @@ class DataManager {
     }
     
     private func getReminder(context: NSManagedObjectContext) -> Single<Reminder?> {
-        .create { observer in
-            context.perform {
-                do {
-                    let request: NSFetchRequest<Reminder> = Reminder.fetchRequest()
-                    
-                    observer(.success(try context.fetch(request).first))
-                } catch {
-                    observer(.error(error))
-                }
-            }
-            
-            return Disposables.create()
+        .create(context) {
+            let request: NSFetchRequest<Reminder> = Reminder.fetchRequest()
+            return try context.fetch(request).first
         }
     }
         
@@ -243,24 +195,13 @@ class DataManager {
     }
     
     private func updateLastOpened(context: NSManagedObjectContext) -> Completable {
-        .create { observer in
-            context.perform {
-                do {
-                    let request: NSFetchRequest<Survey> = Survey.fetchRequest()
-                    
-                    if let survey = try context.fetch(request).first {
-                        survey.lastOpened = Date()
-                        survey.viewModel?.touch()
-                    }
-                    
-                    observer(.completed)
-                    
-                } catch {
-                    observer(.error(error))
-                }
-            }
+        .create(context) {
+            let request: NSFetchRequest<Survey> = Survey.fetchRequest()
             
-            return Disposables.create()
+            if let survey = try context.fetch(request).first {
+                survey.lastOpened = Date()
+                survey.viewModel?.touch()
+            }
         }
     }
     
@@ -285,192 +226,135 @@ class DataManager {
     }
             
     private func clearAllViewModels(context: NSManagedObjectContext) -> Completable {
-        .create { observer in
-            context.perform {
-                do {
-                    let request: NSFetchRequest<ViewModel> = ViewModel.fetchRequest()
-                    
-                    for vm in try context.fetch(request) {
-                        context.delete(vm)
-                    }
-                    
-                    observer(.completed)
-                } catch {
-                    observer(.error(error))
-                }
-            }
+        .create(context) {
+            let request: NSFetchRequest<ViewModel> = ViewModel.fetchRequest()
             
-            return Disposables.create()
+            for vm in try context.fetch(request) {
+                context.delete(vm)
+            }
         }
     }
     
     private func updateSurveyCreateIfNeeded(context: NSManagedObjectContext) -> Completable {
-        .create { observer in
-            context.perform {
-                do {
-                    let request: NSFetchRequest<Survey> = Survey.fetchRequest()
-                    
-                    let survey: Survey
-                    if let existing = try context.fetch(request).first {
-                        survey = existing
-                    } else {
-                        survey = Survey(context: context)
-                    }
-                    
-                    let viewModel = ViewModel(context: context)
-                    viewModel.section = 0
-                    viewModel.row = 0
-                    viewModel.type = ViewModelType.fillSurvey.rawValue
-                    survey.viewModel = viewModel
-                    
-                    if let code = Locale.current.languageCode,
-                        let url = self.surveyURLByLanguageCode[code] {
-                        survey.url = url
-                    } else if let url = self.surveyURLByLanguageCode["en"] {
-                        survey.url = url
-                    }
-                    observer(.completed)
-                } catch {
-                    observer(.error(error))
-                }
+        .create(context) {
+            let request: NSFetchRequest<Survey> = Survey.fetchRequest()
+            
+            let survey: Survey
+            if let existing = try context.fetch(request).first {
+                survey = existing
+            } else {
+                survey = Survey(context: context)
             }
             
-            return Disposables.create()
+            let viewModel = ViewModel(context: context)
+            viewModel.section = 0
+            viewModel.row = 0
+            viewModel.type = ViewModelType.fillSurvey.rawValue
+            survey.viewModel = viewModel
+            
+            if let code = Locale.current.languageCode,
+                let url = self.surveyURLByLanguageCode[code] {
+                survey.url = url
+            } else if let url = self.surveyURLByLanguageCode["en"] {
+                survey.url = url
+            }
         }
     }
     
     private func getNotificationSettingsMO(context: NSManagedObjectContext) -> Single<NotificationSettings?> {
-        .create { observer in
-            context.perform {
-                do {
-                    let request: NSFetchRequest<NotificationSettings> = NotificationSettings.fetchRequest()
-                    observer(.success(try context.fetch(request).first))
-                } catch {
-                    observer(.error(error))
-                }
-            }
-            
-            return Disposables.create()
+        .create(context) {
+            let request: NSFetchRequest<NotificationSettings> = NotificationSettings.fetchRequest()
+            return try context.fetch(request).first
         }
     }
     
     private func updateSettingsViewModels(settingsMO: NotificationSettings,
                                           settings: UNNotificationSettings,
                                           context: NSManagedObjectContext) -> Completable {
-        .create { observer in
-            context.perform {
-                settingsMO.viewModels?.forEach { vm in
-                    context.delete(vm as! NSManagedObject)
-                }
-                
-                settingsMO.settings = settings
-                
-                let viewModel = ViewModel(context: context)
-                viewModel.section = 1
-                viewModel.row = 0
-                viewModel.type = ViewModelType.notificationsAuthorizationStatus.rawValue
-                settingsMO.addToViewModels(viewModel)
-                
-                switch settings.authorizationStatus {
-                case .notDetermined,
-                     .provisional:
-                    let viewModel = ViewModel(context: context)
-                    viewModel.section = 1
-                    viewModel.row = 1
-                    viewModel.type = ViewModelType.requestNotificationsAuthorization.rawValue
-                    settingsMO.addToViewModels(viewModel)
-                case .denied:
-                    let viewModel = ViewModel(context: context)
-                    viewModel.section = 1
-                    viewModel.row = 1
-                    viewModel.type = ViewModelType.openNotificationSettings.rawValue
-                    settingsMO.addToViewModels(viewModel)
-                default:
-                    break
-                }
-                
-                observer(.completed)
+        .create(context) {
+            settingsMO.viewModels?.forEach { vm in
+                context.delete(vm as! NSManagedObject)
             }
             
-            return Disposables.create()
+            settingsMO.settings = settings
+            
+            let viewModel = ViewModel(context: context)
+            viewModel.section = 1
+            viewModel.row = 0
+            viewModel.type = ViewModelType.notificationsAuthorizationStatus.rawValue
+            settingsMO.addToViewModels(viewModel)
+            
+            switch settings.authorizationStatus {
+            case .notDetermined,
+                 .provisional:
+                let viewModel = ViewModel(context: context)
+                viewModel.section = 1
+                viewModel.row = 1
+                viewModel.type = ViewModelType.requestNotificationsAuthorization.rawValue
+                settingsMO.addToViewModels(viewModel)
+            case .denied:
+                let viewModel = ViewModel(context: context)
+                viewModel.section = 1
+                viewModel.row = 1
+                viewModel.type = ViewModelType.openNotificationSettings.rawValue
+                settingsMO.addToViewModels(viewModel)
+            default:
+                break
+            }
         }
     }
     
     private func updateReminderViewModels(settings: UNNotificationSettings,
                                           context: NSManagedObjectContext) -> Completable {
-        .create { observer in
-            context.perform {
-                do {
-                    let request: NSFetchRequest<Reminder> = Reminder.fetchRequest()
-                    
-                    guard let reminder = try context.fetch(request).first else {
-                        observer(.completed)
-                        return
-                    }
-                                        
-                    let vms = reminder.viewModels as! Set<ViewModel>
-                                        
-                    switch settings.authorizationStatus {
-                    case .authorized,
-                         .provisional:
-                        if let vm = vms.first(where: { $0.type == ViewModelType.reminder.rawValue }) {
-                            vm.touch()
-                        } else {
-                            let viewModel = ViewModel(context: context)
-                            viewModel.type = ViewModelType.reminder.rawValue
-                            viewModel.section = 2
-                            viewModel.row = 0
-                            reminder.addToViewModels(viewModel)
-                        }
+        .create(context) {
+            let request: NSFetchRequest<Reminder> = Reminder.fetchRequest()
+            
+            guard let reminder = try context.fetch(request).first else {
+                return
+            }
+                                
+            let vms = reminder.viewModels as! Set<ViewModel>
+                                
+            switch settings.authorizationStatus {
+            case .authorized:
+                if let vm = vms.first(where: { $0.type == ViewModelType.reminder.rawValue }) {
+                    vm.touch()
+                } else {
+                    let viewModel = ViewModel(context: context)
+                    viewModel.type = ViewModelType.reminder.rawValue
+                    viewModel.section = 2
+                    viewModel.row = 0
+                    reminder.addToViewModels(viewModel)
+                }
 
-                        if reminder.isBeingEdited {
-                            if let _ = vms.first(where: { $0.type == ViewModelType.reminderTimeSelection.rawValue }) {
-                                // do nothing
-                            } else {
-                                let viewModel = ViewModel(context: context)
-                                viewModel.type = ViewModelType.reminderTimeSelection.rawValue
-                                viewModel.section = 2
-                                viewModel.row = 1
-                                reminder.addToViewModels(viewModel)
-                            }
-                        } else {
-                            if let vm = vms.first(where: { $0.type == ViewModelType.reminderTimeSelection.rawValue }) {
-                                context.delete(vm)
-                            }
-                        }
-                    default:
-                        vms.forEach {
-                            context.delete($0)
-                        }
+                if reminder.isBeingEdited {
+                    if let _ = vms.first(where: { $0.type == ViewModelType.reminderTimeSelection.rawValue }) {
+                        // do nothing
+                    } else {
+                        let viewModel = ViewModel(context: context)
+                        viewModel.type = ViewModelType.reminderTimeSelection.rawValue
+                        viewModel.section = 2
+                        viewModel.row = 1
+                        reminder.addToViewModels(viewModel)
                     }
-                    
-                    observer(.completed)
-                    
-                } catch {
-                    observer(.error(error))
+                } else {
+                    if let vm = vms.first(where: { $0.type == ViewModelType.reminderTimeSelection.rawValue }) {
+                        context.delete(vm)
+                    }
+                }
+            default:
+                vms.forEach {
+                    context.delete($0)
                 }
             }
-            return Disposables.create()
         }
     }
     
     private func save(_ context: NSManagedObjectContext) -> Completable {
-        .create { observer in
-            context.perform {
-                guard context.hasChanges else {
-                    observer(.completed)
-                    return
-                }
-                
-                do {
-                    try context.save()
-                    observer(.completed)
-                } catch {
-                    observer(.error(error))
-                }
+        .create(context) {
+            if context.hasChanges {
+                try context.save()
             }
-            
-            return Disposables.create()
         }
     }
     

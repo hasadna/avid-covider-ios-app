@@ -18,7 +18,6 @@
         <attribute name="lastModified" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="row" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="section" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
-        <attribute name="sectionName" optional="YES" attributeType="String"/>
         <attribute name="type" optional="YES" attributeType="String"/>
         <relationship name="notificationSettings" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="NotificationSettings" inverseName="viewModels" inverseEntity="NotificationSettings"/>
         <relationship name="reminder" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Reminder" inverseName="viewModels" inverseEntity="Reminder"/>
@@ -28,6 +27,6 @@
         <element name="NotificationSettings" positionX="-54" positionY="45" width="128" height="73"/>
         <element name="Reminder" positionX="-45" positionY="63" width="128" height="88"/>
         <element name="Survey" positionX="-63" positionY="-18" width="128" height="88"/>
-        <element name="ViewModel" positionX="-63" positionY="9" width="128" height="163"/>
+        <element name="ViewModel" positionX="-63" positionY="9" width="128" height="148"/>
     </elements>
 </model>

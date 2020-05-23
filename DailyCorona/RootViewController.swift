@@ -132,6 +132,7 @@ extension RootViewController {
             let date = trigger.nextTriggerDate()!
             
             cell.textLabel?.text = .next_reminder_title
+            cell.textLabel?.numberOfLines = 0
             
             let label = UILabel()
             label.text = dateFormatter.string(from: date)

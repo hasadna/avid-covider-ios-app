@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import RxSwift
+import CoreData
 
 extension String {
         
@@ -33,4 +35,38 @@ extension String {
         NSLocalizedString(self, comment: "")
     }
     
+}
+
+extension Completable {
+    static func create(_ context: NSManagedObjectContext, handler: @escaping () throws -> Void) -> Completable {
+        .create { observer in
+            context.perform {
+                do {
+                    try handler()
+                    observer(.completed)
+                } catch {
+                    observer(.error(error))
+                }
+            }
+            
+            return Disposables.create()
+        }
+    }
+}
+
+extension Single {
+    static func create<T>(_ context: NSManagedObjectContext, handler: @escaping () throws -> T) -> Single<T> {
+        .create { observer in
+            context.perform {
+                do {
+                    let value = try handler()
+                    observer(.success(value))
+                } catch {
+                    observer(.error(error))
+                }
+            }
+            
+            return Disposables.create()
+        }
+    }
 }
